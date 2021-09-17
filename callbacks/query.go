@@ -27,6 +27,7 @@ func Query(db *gorm.DB) {
 	}
 }
 
+// BuildQuerySQL 构造查询语句
 func BuildQuerySQL(db *gorm.DB) {
 	if db.Statement.Schema != nil && !db.Statement.Unscoped {
 		for _, c := range db.Statement.Schema.QueryClauses {
@@ -55,6 +56,7 @@ func BuildQuerySQL(db *gorm.DB) {
 			clauseSelect.Columns = make([]clause.Column, len(db.Statement.Selects))
 			for idx, name := range db.Statement.Selects {
 				if db.Statement.Schema == nil {
+					// 当指定当schema为空时，Raw为true
 					clauseSelect.Columns[idx] = clause.Column{Name: name, Raw: true}
 				} else if f := db.Statement.Schema.LookUpField(name); f != nil {
 					clauseSelect.Columns[idx] = clause.Column{Name: f.DBName}

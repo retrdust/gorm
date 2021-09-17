@@ -19,6 +19,7 @@ const preparedStmtDBKey = "preparedStmt"
 // Config GORM config
 type Config struct {
 	// GORM perform single create, update, delete operations in transactions by default to ensure database data integrity
+	// 默认情况下，GORM在事务中执行单次创建、更新和删除操作，以确保数据库数据的完整性
 	// You can disable it by setting `SkipDefaultTransaction` to true
 	SkipDefaultTransaction bool
 	// NamingStrategy tables, columns naming strategy
@@ -28,8 +29,11 @@ type Config struct {
 	// Logger
 	Logger logger.Interface
 	// NowFunc the function to be used when creating a new timestamp
+	// 可以自行指定当前事件的生成方法，若未指定，默认使用time.Now().Local()。
 	NowFunc func() time.Time
 	// DryRun generate sql without execute
+	// 演练模式，将其设置为true后，仅会生成SQL语句，但不会真正去执行
+	// 包括Create、Delete、Update、Query操作
 	DryRun bool
 	// PrepareStmt executes the given query in cached statement
 	PrepareStmt bool
@@ -40,10 +44,13 @@ type Config struct {
 	// DisableNestedTransaction disable nested transaction
 	DisableNestedTransaction bool
 	// AllowGlobalUpdate allow global update
+	// 是否允许全局更新，若为false，则update、delete语句不携带where子句时会报错。但看起来并没有限制1=1这种手动全局更新。
+	// callbacks.Delete callbacks.Update
 	AllowGlobalUpdate bool
 	// QueryFields executes the SQL query with all fields of the table
 	QueryFields bool
 	// CreateBatchSize default create batch size
+	// 创建数据时的分批数量，当该值>0时，调用Create方法时（包括Save方法内部的Create），按照该数量分批创建。如果反射类型不是Slice或Array，则会使用普通的Create方法。
 	CreateBatchSize int
 
 	// ClauseBuilders clause builder
